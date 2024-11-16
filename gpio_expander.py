@@ -68,15 +68,29 @@ def get_dev_address_write(pannel):
     
     return [dev_addr_0, dev_addr_1]
 
+# Read Oregs
+def read_regs(i2c, dev_addxs, reg_addx):
+    msgs = [I2C.Message(reg_addx, read = False), I2C.Message([0x00,0x00], read = True)]
+    i2c.transfer(dev_addxs, msgs)
+    return msgs[1].data
+
 # Read Outputs
 def read_output_regs(i2c, pannel):
     dev_addxs = get_dev_address_read(pannel)
-    set_address_msg = [I2C.Message(OUTPUT_0, read = False)]
-    read_data_msg = [I2C.Message([0x00,0x00], read = True)]
-    i2c.transfer(dev_addxs, set_address_msg)
-    i2c.transfer(dev_addxs, read_data_msg)
+    outputs = read_regs(i2c, dev_addxs, OUTPUT_0)
+    print(outputs)
+    return outputs
+
+# Read Configs
+def read_output_regs(i2c, pannel):
+    dev_addxs = get_dev_address_read(pannel)
+    configs = read_regs(i2c, dev_addxs, CONFIG_0)
+    print(configs)
+    return configs
 
 # Write op
+
+
 
 if __name__ == '__main__':
     # i2c_dev = I2C("/dev/i2c-10")
