@@ -19,6 +19,35 @@ OUTPUT_0 = 2
 OUTPUT_1 = 3
 CONFIG_0 = 6
 CONFIG_1 = 7
+# Channels
+A = 0
+B = 1
+C = 2
+D = 3
+E = 4
+F = 5
+G = 6
+H = 7
+I = 8
+J = 9
+#RBG
+RED = 0
+BLUE = 1
+GREEN = 2
+# Ch_RBG_pins
+A_RGB = [0,1,2]
+B_RGB = [3,4,5]
+C_RGB = [6,7,8]
+D_RGB = [9,10,11]
+E_RGB = [12,13,14]
+F_RGB = [15,0,1]
+G_RGB = [2,3,4]
+H_RGB = [5,6,7]
+I_RGB = [8,9,10]
+J_RGB = [11,12,13]
+# Expander Pin addressing
+EXP_PINS = [A_RGB,B_RGB,C_RGB,D_RGB,E_RGB,F_RGB,G_RGB,H_RGB,I_RGB,J_RGB]
+
 
 def get_dev_address_read(pannel):
     dev_addr_0 = 0
@@ -102,6 +131,28 @@ def write_output_regs(i2c, pannel, data):
 def write_output_regs(i2c, pannel, data):
     dev_addxs = get_dev_address_write(pannel)
     write_regs(i2c, dev_addxs, CONFIG_0, data)
+
+def turn_off_led(i2c, pannel, ch, color):
+    outputs = read_output_regs(i2c,pannel)
+    print(outputs)
+    # Combine two 8 bits into 16bit for toggling pin
+    output_16 = outputs[1]<<8 + outputs[0]
+    output_16 = output_16 & ~(1<<EXP_PINS[ch][color])
+    # Break the combined number into 8bits to write back to the register
+    outputs[1] = output_16>>8
+    outputs[0] = output_16&0xFF
+    write_output_regs(i2c, pannel, outputs)
+
+def turn_on_led(i2c, pannel, ch, color):
+    outputs = read_output_regs(i2c,pannel)
+    print(outputs)
+    # Combine two 8 bits into 16bit for toggling pin
+    output_16 = outputs[1]<<8 + outputs[0]
+    output_16 = output_16 | ~(1<<EXP_PINS[ch][color])
+    # Break the combined number into 8bits to write back to the register
+    outputs[1] = output_16>>8
+    outputs[0] = output_16&0xFF
+    write_output_regs(i2c, pannel, outputs)
 
 if __name__ == '__main__':
     # i2c_dev = I2C("/dev/i2c-10")
