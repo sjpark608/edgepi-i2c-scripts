@@ -89,8 +89,19 @@ def read_output_regs(i2c, pannel):
     return configs
 
 # Write op
+def write_regs(i2c, dev_addxs, reg_addx, data):
+    msgs = [I2C.Message(reg_addx, read = False), I2C.Message([0x00,0x00], read = False)]
+    i2c.transfer(dev_addxs, msgs)
 
+# Write Outputs
+def write_output_regs(i2c, pannel, data):
+    dev_addxs = get_dev_address_write(pannel)
+    write_regs(i2c, dev_addxs, OUTPUT_0, data)
 
+# Write Configs
+def write_output_regs(i2c, pannel, data):
+    dev_addxs = get_dev_address_write(pannel)
+    write_regs(i2c, dev_addxs, CONFIG_0, data)
 
 if __name__ == '__main__':
     # i2c_dev = I2C("/dev/i2c-10")
