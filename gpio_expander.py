@@ -92,13 +92,15 @@ def read_output_regs(i2c, pannel):
 # Read Configs
 def read_config_regs(i2c, pannel):
     dev_addxs = get_dev_address(pannel)
-    configs = read_regs(i2c, dev_addxs, CONFIG_0)
+    configs = read_regs(i2c, dev_addxs[0], CONFIG_0)
+    print(configs)
+    configs = read_regs(i2c, dev_addxs[1], CONFIG_0)
     print(configs)
     return configs
 
 # Write op
 def write_regs(i2c, dev_addxs, reg_addx, data):
-    msgs = [I2C.Message([reg_addx, 0x00,0x00], read = False)]
+    msgs = [I2C.Message([reg_addx]+data, read = False)]
     i2c.transfer(dev_addxs, msgs)
 
 # Write Outputs
@@ -111,7 +113,9 @@ def write_output_regs(i2c, pannel, data):
 # Write Configs
 def write_config_regs(i2c, pannel, data):
     dev_addxs = get_dev_address(pannel)
-    write_regs(i2c, dev_addxs, CONFIG_0, data)
+    print(dev_addxs)
+    write_regs(i2c, dev_addxs[0], CONFIG_0, data)
+    write_regs(i2c, dev_addxs[1], CONFIG_0, data)
 
 def turn_off_led(i2c, pannel, ch, color):
     outputs = read_output_regs(i2c,pannel)
@@ -155,9 +159,13 @@ if __name__ == '__main__':
             print(hex(dev_addxs_r[0]), hex(dev_addxs_r[1]))
             print(hex(dev_addxs_w[0]), hex(dev_addxs_w[1]))
         elif cmd == 2:
-            read_output_regs(i2c_dev,1)
-            write_output_regs(i2c_dev,1, [0,0])
-            read_output_regs(i2c_dev,1)
+            read_output_regs(i2c_dev,4)
+            write_output_regs(i2c_dev,4, [255,255])
+            read_output_regs(i2c_dev,4)
+
+            read_config_regs(i2c_dev,4)
+            write_config_regs(i2c_dev, 4, [255,255])
+            read_config_regs(i2c_dev,4)
         else:
             print(f'Invalid cmd = {cmd}')
 
