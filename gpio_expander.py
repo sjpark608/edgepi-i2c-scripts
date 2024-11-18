@@ -2,8 +2,8 @@ from periphery import I2C
 
 # Expander base address
 # TODO: need to double check whether the rpi i2c takes 7bit addressing or 8bit addressing
-EXP_TYPE_1 = 0x40
-EXP_TYPE_2 = 0xE8
+EXP_TYPE_1 = 0x20 #010 0[A2,A1,A0]
+EXP_TYPE_2 = 0x74 #111 01[A1,A0]
 # Front Pannel
 PANNEL_0 = [0, 1]
 PANNEL_1 = [2, 3]
@@ -49,87 +49,68 @@ J_RGB = [11,12,13]
 EXP_PINS = [A_RGB,B_RGB,C_RGB,D_RGB,E_RGB,F_RGB,G_RGB,H_RGB,I_RGB,J_RGB]
 
 
-def get_dev_address_read(pannel):
+def get_dev_address(pannel):
     dev_addr_0 = 0
     dev_addr_1 = 0
     if pannel == 0:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_0[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_0[1]<<1) + READ
+        dev_addr_0 = EXP_TYPE_1 + (PANNEL_0[0])
+        dev_addr_1 = EXP_TYPE_1 + (PANNEL_0[1])
     if pannel == 1:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_1[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_1[1]<<1) + READ
+        dev_addr_0 = EXP_TYPE_1 + (PANNEL_1[0])
+        dev_addr_1 = EXP_TYPE_1 + (PANNEL_1[1])
     if pannel == 2:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_2[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_2[1]<<1) + READ
+        dev_addr_0 = EXP_TYPE_1 + (PANNEL_2[0])
+        dev_addr_1 = EXP_TYPE_1 + (PANNEL_2[1])
     if pannel == 3:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_3[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_3[1]<<1) + READ
+        dev_addr_0 = EXP_TYPE_1 + (PANNEL_3[0])
+        dev_addr_1 = EXP_TYPE_1 + (PANNEL_3[1])
     if pannel == 4:
-        dev_addr_0 = EXP_TYPE_2 + (PANNEL_4[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_2 + (PANNEL_4[1]<<1) + READ
+        dev_addr_0 = EXP_TYPE_2 + (PANNEL_4[0])
+        dev_addr_1 = EXP_TYPE_2 + (PANNEL_4[1])
     if pannel == 5:
-        dev_addr_0 = EXP_TYPE_2 + (PANNEL_5[0]<<1) + READ
-        dev_addr_1 = EXP_TYPE_2 + (PANNEL_5[1]<<1) + READ
-    
-    return [dev_addr_0, dev_addr_1]
-
-def get_dev_address_write(pannel):
-    dev_addr_0 = 0
-    dev_addr_1 = 0
-    if pannel == 0:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_0[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_0[1]<<1) + WRITE
-    if pannel == 1:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_1[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_1[1]<<1) + WRITE
-    if pannel == 2:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_2[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_2[1]<<1) + WRITE
-    if pannel == 3:
-        dev_addr_0 = EXP_TYPE_1 + (PANNEL_3[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_1 + (PANNEL_3[1]<<1) + WRITE
-    if pannel == 4:
-        dev_addr_0 = EXP_TYPE_2 + (PANNEL_4[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_2 + (PANNEL_4[1]<<1) + WRITE
-    if pannel == 5:
-        dev_addr_0 = EXP_TYPE_2 + (PANNEL_5[0]<<1) + WRITE
-        dev_addr_1 = EXP_TYPE_2 + (PANNEL_5[1]<<1) + WRITE
+        dev_addr_0 = EXP_TYPE_2 + (PANNEL_5[0])
+        dev_addr_1 = EXP_TYPE_2 + (PANNEL_5[1])
     
     return [dev_addr_0, dev_addr_1]
 
 # Read Oregs
 def read_regs(i2c, dev_addxs, reg_addx):
-    msgs = [I2C.Message(reg_addx, read = False), I2C.Message([0x00,0x00], read = True)]
+    msgs = [I2C.Message([reg_addx], read = False), I2C.Message([0x00,0x00], read = True)]
     i2c.transfer(dev_addxs, msgs)
     return msgs[1].data
 
 # Read Outputs
 def read_output_regs(i2c, pannel):
-    dev_addxs = get_dev_address_read(pannel)
-    outputs = read_regs(i2c, dev_addxs, OUTPUT_0)
+    dev_addxs = get_dev_address(pannel)
+    print(dev_addxs)
+    outputs = read_regs(i2c, dev_addxs[0], OUTPUT_0)
     print(outputs)
+    outputs = read_regs(i2c, dev_addxs[1], OUTPUT_0)
+    print(outputs)    
     return outputs
 
 # Read Configs
-def read_output_regs(i2c, pannel):
-    dev_addxs = get_dev_address_read(pannel)
+def read_config_regs(i2c, pannel):
+    dev_addxs = get_dev_address(pannel)
     configs = read_regs(i2c, dev_addxs, CONFIG_0)
     print(configs)
     return configs
 
 # Write op
 def write_regs(i2c, dev_addxs, reg_addx, data):
-    msgs = [I2C.Message(reg_addx, read = False), I2C.Message([0x00,0x00], read = False)]
+    msgs = [I2C.Message([reg_addx, 0x00,0x00], read = False)]
     i2c.transfer(dev_addxs, msgs)
 
 # Write Outputs
 def write_output_regs(i2c, pannel, data):
-    dev_addxs = get_dev_address_write(pannel)
-    write_regs(i2c, dev_addxs, OUTPUT_0, data)
+    dev_addxs = get_dev_address(pannel)
+    print(dev_addxs)
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, data)
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, data)
 
 # Write Configs
-def write_output_regs(i2c, pannel, data):
-    dev_addxs = get_dev_address_write(pannel)
+def write_config_regs(i2c, pannel, data):
+    dev_addxs = get_dev_address(pannel)
     write_regs(i2c, dev_addxs, CONFIG_0, data)
 
 def turn_off_led(i2c, pannel, ch, color):
@@ -155,7 +136,7 @@ def turn_on_led(i2c, pannel, ch, color):
     write_output_regs(i2c, pannel, outputs)
 
 if __name__ == '__main__':
-    # i2c_dev = I2C("/dev/i2c-10")
+    i2c_dev = I2C("/dev/i2c-10")
     cmd = None
     while cmd != 0:
         cmd = int(input("""
@@ -163,15 +144,20 @@ if __name__ == '__main__':
                 ----
                  (0). exit
                  (1). Check Addresses
+                 (2). Read GPIO
                 """).strip())
         if cmd == 0:
             print('Exit program')
         elif cmd == 1:
             pannel = int(input("Input Pannel Number: ").strip())
-            dev_addxs_r = get_dev_address_read(pannel)
-            dev_addxs_w = get_dev_address_write(pannel)
+            dev_addxs_r = get_dev_address(pannel)
+            dev_addxs_w = get_dev_address(pannel)
             print(hex(dev_addxs_r[0]), hex(dev_addxs_r[1]))
             print(hex(dev_addxs_w[0]), hex(dev_addxs_w[1]))
+        elif cmd == 2:
+            read_output_regs(i2c_dev,1)
+            write_output_regs(i2c_dev,1, [0,0])
+            read_output_regs(i2c_dev,1)
         else:
             print(f'Invalid cmd = {cmd}')
 
