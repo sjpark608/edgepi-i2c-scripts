@@ -1,4 +1,5 @@
 from periphery import I2C
+import time
 
 # Expander base address
 # TODO: need to double check whether the rpi i2c takes 7bit addressing or 8bit addressing
@@ -104,11 +105,18 @@ def write_regs(i2c, dev_addxs, reg_addx, data):
     i2c.transfer(dev_addxs, msgs)
 
 # Write Outputs
-def write_output_regs(i2c, pannel, data):
+def write_output_regs(i2c, pannel, pin):
     dev_addxs = get_dev_address(pannel)
-    print(dev_addxs)
-    write_regs(i2c, dev_addxs[0], OUTPUT_0, data)
-    write_regs(i2c, dev_addxs[1], OUTPUT_0, data)
+    pins = 65535
+    if pin<16:
+        pins = [(pins&~(1<<pin))&0xFF, (pins&~(1<<pin))>>8]
+        write_regs(i2c, dev_addxs[0], OUTPUT_0, pins)
+    elif pin>=16:
+        pin = pin-16
+        pins = [(pins&~(1<<pin))&0xFF, (pins&~(1<<pin))>>8]
+        write_regs(i2c, dev_addxs[1], OUTPUT_0, pins)
+    # write_regs(i2c, dev_addxs[0], OUTPUT_0, pins)
+    # write_regs(i2c, dev_addxs[1], OUTPUT_0, [255,255])
 
 # Write Configs
 def write_config_regs(i2c, pannel, data):
@@ -159,13 +167,14 @@ if __name__ == '__main__':
             print(hex(dev_addxs_r[0]), hex(dev_addxs_r[1]))
             print(hex(dev_addxs_w[0]), hex(dev_addxs_w[1]))
         elif cmd == 2:
-            read_output_regs(i2c_dev,4)
-            write_output_regs(i2c_dev,4, [255,255])
-            read_output_regs(i2c_dev,4)
-
-            read_config_regs(i2c_dev,4)
-            write_config_regs(i2c_dev, 4, [255,255])
-            read_config_regs(i2c_dev,4)
+            for i in range(30):
+                read_output_regs(i2c_dev,2)
+                write_output_regs(i2c_dev,2, i)
+                read_output_regs(i2c_dev,2)
+                read_config_regs(i2c_dev,2)
+                write_config_regs(i2c_dev, 2, [0,0])
+                read_config_regs(i2c_dev,2)
+                time.sleep(1)
         else:
             print(f'Invalid cmd = {cmd}')
 
