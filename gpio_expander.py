@@ -168,12 +168,42 @@ if __name__ == '__main__':
             print(hex(dev_addxs_w[0]), hex(dev_addxs_w[1]))
         elif cmd == 2:
             for i in range(30):
+
+                read_output_regs(i2c_dev,4)
+                write_output_regs(i2c_dev,4, i)
+                read_output_regs(i2c_dev,4)
+                read_config_regs(i2c_dev,4)
+                write_config_regs(i2c_dev,4, [0,0])
+                read_config_regs(i2c_dev,4)
+
+                read_output_regs(i2c_dev,1)
+                write_output_regs(i2c_dev,1, i)
+                read_output_regs(i2c_dev,1)
+                read_config_regs(i2c_dev,1)
+                write_config_regs(i2c_dev,1, [0,0])
+                read_config_regs(i2c_dev,1)
+
                 read_output_regs(i2c_dev,2)
                 write_output_regs(i2c_dev,2, i)
                 read_output_regs(i2c_dev,2)
                 read_config_regs(i2c_dev,2)
                 write_config_regs(i2c_dev, 2, [0,0])
                 read_config_regs(i2c_dev,2)
+
+                read_output_regs(i2c_dev,3)
+                write_output_regs(i2c_dev,3, i)
+                read_output_regs(i2c_dev,3)
+                read_config_regs(i2c_dev,3)
+                write_config_regs(i2c_dev,3, [0,0])
+                read_config_regs(i2c_dev,3)
+
+                read_output_regs(i2c_dev,5)
+                write_output_regs(i2c_dev,5, i)
+                read_output_regs(i2c_dev,5)
+                read_config_regs(i2c_dev,5)
+                write_config_regs(i2c_dev,5, [0,0])
+                read_config_regs(i2c_dev,5)
+
                 time.sleep(1)
         else:
             print(f'Invalid cmd = {cmd}')
