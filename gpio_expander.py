@@ -147,6 +147,14 @@ def turn_on_led(i2c, pannel, ch, color):
     outputs[0] = output_16&0xFF
     write_output_regs(i2c, pannel, outputs)
 
+def project_christmas_light(i2c_dev, pannel, pins):
+    read_output_regs(i2c_dev,pannel)
+    write_output_regs(i2c_dev,pannel, pins)
+    read_output_regs(i2c_dev,pannel)
+    read_config_regs(i2c_dev,pannel)
+    write_config_regs(i2c_dev,pannel, [0,0])
+    read_config_regs(i2c_dev,pannel)
+
 if __name__ == '__main__':
     i2c_dev = I2C("/dev/i2c-10")
     cmd = None
@@ -205,6 +213,8 @@ if __name__ == '__main__':
                 read_config_regs(i2c_dev,5)
 
                 time.sleep(1)
+        if cmd == 3:
+
         else:
             print(f'Invalid cmd = {cmd}')
 
