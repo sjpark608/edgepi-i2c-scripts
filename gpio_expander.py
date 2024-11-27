@@ -1,5 +1,14 @@
+from pymodbus import pymodbus_apply_logging_config
+from pymodbus.client import ModbusSerialClient
+
+from pymodbus.exceptions import ModbusException
+from pymodbus.pdu import ExceptionResponse
+
 from periphery import I2C
 import time
+import logging
+_logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 # Expander base address
 # TODO: need to double check whether the rpi i2c takes 7bit addressing or 8bit addressing
@@ -155,8 +164,18 @@ def project_christmas_light(i2c_dev, pannel, pins):
     write_config_regs(i2c_dev,pannel, [0,0])
     read_config_regs(i2c_dev,pannel)
 
+def serial_test(client, num_dev):
+    client.connect()
+    for nth in range(num_dev):
+        regs = client.read_holding_registers(1,10,247-nth)
+        _logger.info(f"Serial Num: {(regs.registers[0]<<16) + regs.registers[1]},  FW Ver: {regs.registers[4]>>8}.{regs.registers[4]&0xFF}, Dev ID: {regs.registers[9]}")
+    client.close()
+
 if __name__ == '__main__':
     i2c_dev = I2C("/dev/i2c-10")
+    client = ModbusSerialClient( "/dev/ttyUSB0", retries=3, baudrate=115200, bytesize=8, parity="N", stopbits=1, timeout=1)
+
+
     cmd = None
     while cmd != 0:
         cmd = int(input("""
@@ -214,7 +233,7 @@ if __name__ == '__main__':
 
                 time.sleep(1)
         if cmd == 3:
-
+            serial_test(client, 5)
         else:
             print(f'Invalid cmd = {cmd}')
 
