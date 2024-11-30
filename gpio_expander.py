@@ -265,6 +265,10 @@ if __name__ == '__main__':
             write_reds_1(i2c_dev, 1)
             time.sleep(1)
             write_reds_2(i2c_dev, 1)
+            time.sleep(1)
+            write_green_1(i2c_dev, 1)
+            time.sleep(1)
+            write_green_2(i2c_dev, 1)
         else:
             print(f'Invalid cmd = {cmd}')
 
