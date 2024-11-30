@@ -156,7 +156,7 @@ def write_green_2(i2c,pannel):
 # Write Configs
 def write_config_regs(i2c, pannel, data):
     dev_addxs = get_dev_address(pannel)
-    print(dev_addxs)
+    # print(dev_addxs)
     write_regs(i2c, dev_addxs[0], CONFIG_0, data)
     write_regs(i2c, dev_addxs[1], CONFIG_0, data)
 
@@ -266,14 +266,14 @@ if __name__ == '__main__':
                 write_reds_1(i2c_dev, 1)
                 write_reds_1(i2c_dev, 3)
                 write_reds_1(i2c_dev, 5)
-                write_green_1(i2c_dev, 2)
-                write_green_1(i2c_dev, 4)
+                write_green_2(i2c_dev, 2)
+                write_green_2(i2c_dev, 4)
                 time.sleep(1)
                 write_reds_2(i2c_dev, 1)
                 write_reds_2(i2c_dev, 3)
                 write_reds_2(i2c_dev, 5)
-                write_green_2(i2c_dev, 2)
-                write_green_2(i2c_dev, 4)
+                write_green_1(i2c_dev, 2)
+                write_green_1(i2c_dev, 4)
                 time.sleep(1)
         else:
             print(f'Invalid cmd = {cmd}')
