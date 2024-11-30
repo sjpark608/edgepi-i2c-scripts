@@ -139,6 +139,20 @@ def write_reds_2(i2c,pannel):
     write_regs(i2c, dev_addxs[1], OUTPUT_0, [0xFF-0x20,0xFF-0x08])
     write_config_regs(i2c, pannel, [0,0])
 
+def write_green_1(i2c,pannel):
+    dev_addxs = get_dev_address(pannel)
+    greens = ((0x01<<24)+(0x04<<16)+0x10*256 + 0x41)<<2
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0xFF-(greens&0xFF),0xFF-((greens>>8)&0xFF)])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0xFF-((greens>>16)&0xFF),0xFF-((greens>>24)&0xFF)])
+    write_config_regs(i2c, pannel, [0,0])
+
+def write_green_2(i2c,pannel):
+    dev_addxs = get_dev_address(pannel)
+    greens = ((0x08<<24)+(0x20<<16)+0x82*256 + 0x08)<<2
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0xFF-(greens&0xFF),0xFF-((greens>>8)&0xFF)])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0xFF-((greens>>16)&0xFF),0xFF-((greens>>24)&0xFF)])
+    write_config_regs(i2c, pannel, [0,0])
+
 # Write Configs
 def write_config_regs(i2c, pannel, data):
     dev_addxs = get_dev_address(pannel)
