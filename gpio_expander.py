@@ -262,13 +262,19 @@ if __name__ == '__main__':
             serial_test(client, 25,200)
             serial_test(client, 25,101)
         if cmd == 4:
-            write_reds_1(i2c_dev, 1)
-            time.sleep(1)
-            write_reds_2(i2c_dev, 1)
-            time.sleep(1)
-            write_green_1(i2c_dev, 1)
-            time.sleep(1)
-            write_green_2(i2c_dev, 1)
+            while(1):
+                write_reds_1(i2c_dev, 1)
+                write_reds_1(i2c_dev, 3)
+                write_reds_1(i2c_dev, 5)
+                write_green_1(i2c_dev, 2)
+                write_green_1(i2c_dev, 4)
+                time.sleep(1)
+                write_reds_2(i2c_dev, 1)
+                write_reds_2(i2c_dev, 3)
+                write_reds_2(i2c_dev, 5)
+                write_green_2(i2c_dev, 2)
+                write_green_2(i2c_dev, 4)
+                time.sleep(1)
         else:
             print(f'Invalid cmd = {cmd}')
 
