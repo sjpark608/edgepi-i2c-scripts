@@ -129,14 +129,14 @@ def write_output_regs(i2c, pannel, pin):
 
 def write_reds_1(i2c,pannel):
     dev_addxs = get_dev_address(pannel)
-    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0x21,0x10])
-    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0x04,0x01])
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [~0x21,~0x10])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [~0x04,~0x01])
     write_config_regs(i2c, pannel, [0,0])
 
 def write_reds_2(i2c,pannel):
     dev_addxs = get_dev_address(pannel)
-    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0x08,0x82])
-    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0x20,0x08])
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [~0x08,~0x82])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [~0x20,~0x08])
     write_config_regs(i2c, pannel, [0,0])
 
 # Write Configs
