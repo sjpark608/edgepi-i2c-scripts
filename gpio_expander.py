@@ -168,7 +168,7 @@ def serial_test(client, num_dev, start):
     client.connect()
     for nth in range(num_dev):
         regs = client.read_holding_registers(1,10,start+nth)
-        _logger.info(f"Serial Num: {(regs.registers[0]<<16) + regs.registers[1]},  FW Ver: {regs.registers[4]>>8}.{regs.registers[4]&0xFF}, Dev ID: {regs.registers[9]}")
+        _logger.info(f"Serial Num: {(regs.registers[0]<<16) + regs.registers[1]},  FW Ver: {regs.registers[4]>>8}.{regs.registers[4]&0xFF}, Dev ID: {regs.registers[9]}, nth: {nth}")
     client.close()
 
 if __name__ == '__main__':
