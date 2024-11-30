@@ -127,6 +127,16 @@ def write_output_regs(i2c, pannel, pin):
     # write_regs(i2c, dev_addxs[0], OUTPUT_0, pins)
     # write_regs(i2c, dev_addxs[1], OUTPUT_0, [255,255])
 
+def write_reds_1(i2c,pannel):
+    dev_addxs = get_dev_address(pannel)
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0x21&0xFF,0x10&0xFF])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0x04&0xFF,0x01&0xFF])
+
+def write_reds_2(i2c,pannel):
+    dev_addxs = get_dev_address(pannel)
+    write_regs(i2c, dev_addxs[0], OUTPUT_0, [0x08&0xFF,0x82&0xFF])
+    write_regs(i2c, dev_addxs[1], OUTPUT_0, [0x20&0xFF,0x08&0xFF])
+
 # Write Configs
 def write_config_regs(i2c, pannel, data):
     dev_addxs = get_dev_address(pannel)
@@ -235,6 +245,10 @@ if __name__ == '__main__':
         if cmd == 3:
             serial_test(client, 25,200)
             serial_test(client, 25,101)
+        if cmd == 4:
+            write_reds_1(i2c_dev, 1)
+            time.sleep(1)
+            write_reds_2(i2c_dev, 1)
         else:
             print(f'Invalid cmd = {cmd}')
 
