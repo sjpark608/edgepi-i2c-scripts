@@ -264,15 +264,23 @@ if __name__ == '__main__':
         if cmd == 4:
             while(1):
                 write_reds_1(i2c_dev, 1)
+		time.sleep(0.01)
                 write_reds_1(i2c_dev, 3)
+		time.sleep(0.01)
                 write_reds_1(i2c_dev, 5)
+		time.sleep(0.01)
                 write_green_2(i2c_dev, 2)
+		time.sleep(0.01)
                 write_green_2(i2c_dev, 4)
                 time.sleep(1)
                 write_reds_2(i2c_dev, 1)
+		time.sleep(0.01)
                 write_reds_2(i2c_dev, 3)
+		time.sleep(0.01)
                 write_reds_2(i2c_dev, 5)
+		time.sleep(0.01)
                 write_green_1(i2c_dev, 2)
+		time.sleep(0.01)
                 write_green_1(i2c_dev, 4)
                 time.sleep(1)
         else:
